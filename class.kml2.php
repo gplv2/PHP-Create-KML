@@ -11,8 +11,8 @@
  *
  */
 class kml {
-	private $sBody;
 	private $sHeader;
+	private $sBody;
 	private $sFooter;
    private $sName;
 
@@ -34,7 +34,7 @@ class kml {
 	/**
 	 * Constructor
 	 */
-	function __construct($sName, $tags) {
+	public function __construct($sName, $properties) {
 		$this->sName = $sName;
 		$this->sHeader = '<?xml version="1.0" encoding="utf-8"?>' . "\n";
 		// $this->sHeader .= '<kml xmlns="http://earth.google.com/kml/2.0">' . "\n"; -> This makes stuff fail in google earth at the time
@@ -47,455 +47,178 @@ class kml {
 		$this->sHeader .= "<Document>" . "\n" ;
 		$this->sHeader .= "<name>$sName</name>" . "\n" ;
 		$this->sHeader .= "<open>1</open>" . "\n" ;
-		//$this->sHeader .= "<description>Description</description>"  . "\n";
 		$this->sHeader .= "<description><![CDATA[" . $sName . "]]>" . "</description>" . "\n";
 
-		/** This is in styles.kml now: see: -> doesn't work
-      http://code.google.com/p/kml-samples/source/browse/trunk/kml/Style/styles.kml?spec=svn115&r=115
+		//$this->sHeader .= "<description>Description</description>"  . "\n";
+		/** http://code.google.com/p/kml-samples/source/browse/trunk/kml/Style/styles.kml?spec=svn115&r=115 */
 
-		 * To change the style generate kml in google eath y paste in the next
-		 * line the header style.
-		$this->sHeader .= '<Style id="LightGreenLine">' ."\n";
-      $this->sHeader .= '<LineStyle>'."\n";
-      $this->sHeader .= '<color>ff56ff1d</color>'."\n";
-      $this->sHeader .= '<width>3</width>'."\n";
-      $this->sHeader .= '</LineStyle>'."\n";
-      $this->sHeader .= '</Style>' . "\n";
+      $default_line_styles = array(
+         array('id'=> 'LightGreenLine','color'=> 'ff56ff1d','width'=> 3),
+         array('id'=> 'GreenLine','color'=> 'ff35d500','width'=> 3),
+         array('id'=> 'DarkGreenLine','color'=> 'ff0dc70b','width'=> 3),
+         array('id'=> 'LightRedLine','color'=> 'ffa5a5f7','width'=> 3),
+         array('id'=> 'RedLine','color'=> 'ff0000ff','width'=> 3),
+         array('id'=> 'DarkRedLine','color'=> 'ff2222a5','width'=> 3),
+         array('id'=> 'LightBlueLine','color'=> 'fffca17e','width'=> 3),
+         array('id'=> 'BlueLine','color'=> 'ffff16a1','width'=> 3),
+         array('id'=> 'DarkBlueLine','color'=> 'ffa00b03','width'=> 3)
+      );
+      
+      $this->add_line_style($default_line_styles);
 
-		$this->sHeader .= '<Style id="GreenLine">' ."\n";
-      $this->sHeader .= '<LineStyle>'."\n";
-      $this->sHeader .= '<color>ff35d500</color>'."\n";
-      $this->sHeader .= '<width>3</width>'."\n";
-      $this->sHeader .= '</LineStyle>'."\n";
-      $this->sHeader .= '</Style>' . "\n";
+      $default_icon_styles = array(
+         array('id'=> 'busIcon','url'=> 'http://live.synctrace.com/icons/bus.png','width'=> 2),
+         array('id'=> 'busIcon2','url'=> 'http://live.synctrace.com/icons/bustour.png','width'=> 3),
+         array('id'=> 'StartIcon','url'=> 'http://live.synctrace.com/icons/busstopblue.png','width'=> 2),
+         array('id'=> 'SleepIcon','url'=> 'http://live.synctrace.com/images/kml/2/icon28.png','width'=> 2),
+         array('id'=> 'StopIcon','url'=> 'http://live.synctrace.com/images/kml/4/icon15.png','width'=> 2)
+      );
 
-		$this->sHeader .= '<Style id="DarkGreenLine">' ."\n";
-      $this->sHeader .= '<LineStyle>'."\n";
-      $this->sHeader .= '<color>ff0dc70b</color>'."\n";
-      $this->sHeader .= '<width>3</width>'."\n";
-      $this->sHeader .= '</LineStyle>'."\n";
-      $this->sHeader .= '</Style>' . "\n";
+      $this->add_icon_style($default_icon_styles);
 
-		$this->sHeader .= '<Style id="LightRedLine">' ."\n";
-      $this->sHeader .= '<LineStyle>'."\n";
-      $this->sHeader .= '<color>ffa5a5f7</color>'."\n";
-      $this->sHeader .= '<width>3</width>'."\n";
-      $this->sHeader .= '</LineStyle>'."\n";
-      $this->sHeader .= '</Style>' . "\n";
-
-		$this->sHeader .= '<Style id="RedLine">' ."\n";
-      $this->sHeader .= '<LineStyle>'."\n";
-      $this->sHeader .= '<color>ff0000ff</color>'."\n";
-      $this->sHeader .= '<width>3</width>'."\n";
-      $this->sHeader .= '</LineStyle>'."\n";
-      $this->sHeader .= '</Style>' . "\n";
-
-		$this->sHeader .= '<Style id="DarkRedLine">' ."\n";
-      $this->sHeader .= '<LineStyle>'."\n";
-      $this->sHeader .= '<color>ff2222a5</color>'."\n";
-      $this->sHeader .= '<width>3</width>'."\n";
-      $this->sHeader .= '</LineStyle>'."\n";
-      $this->sHeader .= '</Style>' . "\n";
-
-		$this->sHeader .= '<Style id="LightBlueLine">' ."\n";
-      $this->sHeader .= '<LineStyle>'."\n";
-      $this->sHeader .= '<color>fffca17e</color>'."\n";
-      $this->sHeader .= '<width>3</width>'."\n";
-      $this->sHeader .= '</LineStyle>'."\n";
-      $this->sHeader .= '</Style>' . "\n";
-
-		$this->sHeader .= '<Style id="BlueLine">' ."\n";
-      $this->sHeader .= '<LineStyle>'."\n";
-      $this->sHeader .= '<color>ffff16a1</color>'."\n";
-      $this->sHeader .= '<width>3</width>'."\n";
-      $this->sHeader .= '</LineStyle>'."\n";
-      $this->sHeader .= '</Style>' . "\n";
-
-		$this->sHeader .= '<Style id="DarkBlueLine">' ."\n";
-      $this->sHeader .= '<LineStyle>'."\n";
-      $this->sHeader .= '<color>ffa00b03</color>'."\n";
-      $this->sHeader .= '<width>3</width>'."\n";
-      $this->sHeader .= '</LineStyle>'."\n";
-      $this->sHeader .= '</Style>' . "\n";
-      */
-      $this->sHeader .= '<Style id="busIcon">'. "\n";
-      $this->sHeader .= '<IconStyle>'. "\n";
-      $this->sHeader .= '<Icon>'. "\n";
-      $this->sHeader .= '<href>http://live.synctrace.com/icons/bus.png</href>'. "\n";
-      $this->sHeader .= '</Icon>'. "\n";
-      $this->sHeader .= '</IconStyle>'. "\n";
-      $this->sHeader .= '<LineStyle>'. "\n";
-      $this->sHeader .= '<width>2</width>'. "\n";
-      $this->sHeader .= '</LineStyle>'. "\n";
-      $this->sHeader .= '</Style>'. "\n";
-
-      $this->sHeader .= '<Style id="busIcon2">'. "\n";
-      $this->sHeader .= '<IconStyle>'. "\n";
-      $this->sHeader .= '<Icon>'. "\n";
-      $this->sHeader .= '<href>http://live.synctrace.com/icons/bustour.png</href>'. "\n";
-      $this->sHeader .= '</Icon>'. "\n";
-      $this->sHeader .= '</IconStyle>'. "\n";
-      $this->sHeader .= '<LineStyle>'. "\n";
-      $this->sHeader .= '<width>2</width>'. "\n";
-      $this->sHeader .= '</LineStyle>'. "\n";
-      $this->sHeader .= '</Style>'. "\n";
-
-      $this->sHeader .= '<Style id="startIcon">'. "\n";
-      $this->sHeader .= '<IconStyle>'. "\n";
-      $this->sHeader .= '<Icon>'. "\n";
-      $this->sHeader .= '<href>http://live.synctrace.com/icons/busstopblue.png</href>'. "\n";
-      $this->sHeader .= '</Icon>'. "\n";
-      $this->sHeader .= '</IconStyle>'. "\n";
-      $this->sHeader .= '<LineStyle>'. "\n";
-      $this->sHeader .= '<width>2</width>'. "\n";
-      $this->sHeader .= '</LineStyle>'. "\n";
-      $this->sHeader .= '</Style>'. "\n";
-
-      $this->sHeader .= '<Style id="sleepIcon">'. "\n";
-      $this->sHeader .= '<IconStyle>'. "\n";
-      $this->sHeader .= '<Icon>'. "\n";
-      $this->sHeader .= '<href>http://live.synctrace.com/images/kml/2/icon28.png</href>'. "\n";
-      $this->sHeader .= '</Icon>'. "\n";
-      $this->sHeader .= '</IconStyle>'. "\n";
-      $this->sHeader .= '<LineStyle>'. "\n";
-      $this->sHeader .= '<width>2</width>'. "\n";
-      $this->sHeader .= '</LineStyle>'. "\n";
-      $this->sHeader .= '</Style>'. "\n";
-
-      $this->sHeader .= '<Style id="i4Icon">'. "\n";
-      $this->sHeader .= '<IconStyle>'. "\n";
-      $this->sHeader .= '<Icon>'. "\n";
-      $this->sHeader .= '<href>http://live.synctrace.com/images/kml/3/icon3.png</href>'. "\n";
-      $this->sHeader .= '</Icon>'. "\n";
-      $this->sHeader .= '</IconStyle>'. "\n";
-      $this->sHeader .= '<LineStyle>'. "\n";
-      $this->sHeader .= '<width>2</width>'. "\n";
-      $this->sHeader .= '</LineStyle>'. "\n";
-      $this->sHeader .= '</Style>'. "\n";
-
-      $this->sHeader .= '<Style id="stopIcon">'. "\n";
-      $this->sHeader .= '<IconStyle>'. "\n";
-      $this->sHeader .= '<Icon>'. "\n";
-      $this->sHeader .= '<href>http://live.synctrace.com/images/kml/4/icon15.png</href>'. "\n";
-      $this->sHeader .= '</Icon>'. "\n";
-      $this->sHeader .= '</IconStyle>'. "\n";
-      $this->sHeader .= '<LineStyle>'. "\n";
-      $this->sHeader .= '<width>2</width>'. "\n";
-      $this->sHeader .= '</LineStyle>'. "\n";
-      $this->sHeader .= '</Style>'. "\n";
 
       /*
-      $this->sHeader .= '<Style id="transPurpleLineGreenPoly">' ."\n";
-      $this->sHeader .= '<LineStyle>' ."\n";
-      $this->sHeader .= '<color>7fff00ff</color>' ."\n";
-      $this->sHeader .= '<width>4</width>' ."\n";
-      $this->sHeader .= '</LineStyle>' ."\n";
-      $this->sHeader .= '<PolyStyle>' ."\n";
-      $this->sHeader .= '<color>7f00ff00</color>' ."\n";
-      $this->sHeader .= '</PolyStyle>' ."\n";
       $this->sHeader .= '</Style>' ."\n";
+      */
+      
+      $default_poly_styles = array(
+         array('id'=> 'auto_0','color'=> 'ff0000ff','width'=> 4),
+         array('id'=> 'auto_1','color'=> 'ff0041ff','width'=> 4),
+         array('id'=> 'auto_2','color'=> 'ff00a5ff','width'=> 4),
+         array('id'=> 'auto_3','color'=> 'ff00bbff','width'=> 4),
+         array('id'=> 'auto_4','color'=> 'ff00ffff','width'=> 4),
+         array('id'=> 'auto_5','color'=> 'ff00e4ca','width'=> 4),
+         array('id'=> 'auto_6','color'=> 'ff00b265','width'=> 4),
+         array('id'=> 'auto_7','color'=> 'ff008000','width'=> 4),
+         array('id'=> 'auto_8','color'=> 'ff654d00','width'=> 4),
+         array('id'=> 'auto_9','color'=> 'ffff0000','width'=> 4),
+         array('id'=> 'auto_A','color'=> 'ffe00012','width'=> 4),
+         array('id'=> 'auto_B','color'=> 'ff82004b','width'=> 4),
+         array('id'=> 'auto_C','color'=> 'ff981a6c','width'=> 4),
+         array('id'=> 'auto_D','color'=> 'ffc34ead','width'=> 4),
+         array('id'=> 'auto_E','color'=> 'ffee82ee','width'=> 4)
+      );
 
-      $this->sHeader .= '<Style id="yellowLineGreenPoly">' ."\n";
-      $this->sHeader .= '<LineStyle>' ."\n";
-      $this->sHeader .= '<color>7f00ffff</color>' ."\n";
-      $this->sHeader .= '<width>4</width>' ."\n";
-      $this->sHeader .= '</LineStyle>' ."\n";
-      $this->sHeader .= '<PolyStyle>' ."\n";
-      $this->sHeader .= '<color>7f00ff00</color>' ."\n";
-      $this->sHeader .= '</PolyStyle>' ."\n";
-      $this->sHeader .= '</Style>' ."\n";
+      $this->add_icon_style($default_poly_styles);
 
-      $this->sHeader .= '<Style id="thickBlackLine">' ."\n";
-      $this->sHeader .= '<LineStyle>' ."\n";
-      $this->sHeader .= '<color>87000000</color>' ."\n";
-      $this->sHeader .= '<width>10</width>' ."\n";
-      $this->sHeader .= '</LineStyle>' ."\n";
-      $this->sHeader .= '</Style>' ."\n";
-
-      $this->sHeader .= '<Style id="redLineBluePoly">' ."\n";
-      $this->sHeader .= '<LineStyle>' ."\n";
-      $this->sHeader .= '<color>ff0000ff</color>' ."\n";
-      $this->sHeader .= '</LineStyle>' ."\n";
-      $this->sHeader .= '<PolyStyle>' ."\n";
-      $this->sHeader .= '<color>ffff0000</color>' ."\n";
-      $this->sHeader .= '</PolyStyle>' ."\n";
-      $this->sHeader .= '</Style>' ."\n";
-/*
-      $this->sHeader .= '<Style id="transPurpleLineGreenPoly">' ."\n";
-      $this->sHeader .= '<LineStyle>' ."\n";
-      $this->sHeader .= '<color>7fff00ff</color>' ."\n";
-      $this->sHeader .= '<width>4</width>' ."\n";
-      $this->sHeader .= '</LineStyle>' ."\n";
-      $this->sHeader .= '<PolyStyle>' ."\n";
-      $this->sHeader .= '<color>7f00ff00</color>' ."\n";
-      $this->sHeader .= '</PolyStyle>' ."\n";
-      $this->sHeader .= '</Style>' ."\n";
-
-      $this->sHeader .= '<Style id="yellowLineGreenPoly">' ."\n";
-      $this->sHeader .= '<LineStyle>' ."\n";
-      $this->sHeader .= '<color>7f00ffff</color>' ."\n";
-      $this->sHeader .= '<width>4</width>' ."\n";
-      $this->sHeader .= '</LineStyle>' ."\n";
-      $this->sHeader .= '<PolyStyle>' ."\n";
-      $this->sHeader .= '<color>7f00ff00</color>' ."\n";
-      $this->sHeader .= '</PolyStyle>' ."\n";
-      $this->sHeader .= '</Style>' ."\n";
-
-      $this->sHeader .= '<Style id="thickBlackLine">' ."\n";
-      $this->sHeader .= '<LineStyle>' ."\n";
-      $this->sHeader .= '<color>87000000</color>' ."\n";
-      $this->sHeader .= '<width>10</width>' ."\n";
-      $this->sHeader .= '</LineStyle>' ."\n";
-      $this->sHeader .= '</Style>' ."\n";
-
-      $this->sHeader .= '<Style id="redLineBluePoly">' ."\n";
-      $this->sHeader .= '<LineStyle>' ."\n";
-      $this->sHeader .= '<color>ff0000ff</color>' ."\n";
-      $this->sHeader .= '</LineStyle>' ."\n";
-      $this->sHeader .= '<PolyStyle>' ."\n";
-      $this->sHeader .= '<color>ffff0000</color>' ."\n";
-      $this->sHeader .= '</PolyStyle>' ."\n";
-      $this->sHeader .= '</Style>' ."\n";
-
-      $this->sHeader .= '<Style id="blueLineRedPoly">' ."\n";
-      $this->sHeader .= '<LineStyle>' ."\n";
-      $this->sHeader .= '<color>ffff0000</color>' ."\n";
-      $this->sHeader .= '</LineStyle>' ."\n";
-      $this->sHeader .= '<PolyStyle>' ."\n";
-      $this->sHeader .= '<color>ff0000ff</color>' ."\n";
-      $this->sHeader .= '</PolyStyle>' ."\n";
-      $this->sHeader .= '</Style>' ."\n";
-
-      $this->sHeader .= '<Style id="transRedPoly">' ."\n";
-      $this->sHeader .= '<LineStyle>' ."\n";
-      $this->sHeader .= '<width>1.5</width>' ."\n";
-      $this->sHeader .= '</LineStyle>' ."\n";
-      $this->sHeader .= '<PolyStyle>' ."\n";
-      $this->sHeader .= '<color>7d0000ff</color>' ."\n";
-      $this->sHeader .= '</PolyStyle>' ."\n";
-      $this->sHeader .= '</Style>' ."\n";
-
-      $this->sHeader .= '<Style id="transBluePoly">' ."\n";
-      $this->sHeader .= '<LineStyle>' ."\n";
-      $this->sHeader .= '<width>1.5</width>' ."\n";
-      $this->sHeader .= '</LineStyle>' ."\n";
-      $this->sHeader .= '<PolyStyle>' ."\n";
-      $this->sHeader .= '<color>7dff0000</color>' ."\n";
-      $this->sHeader .= '</PolyStyle>' ."\n";
-      $this->sHeader .= '</Style>' ."\n";
-
-      $this->sHeader .= '<Style id="transGreenPoly">' ."\n";
-      $this->sHeader .= '<LineStyle>' ."\n";
-      $this->sHeader .= '<width>1.5</width>' ."\n";
-      $this->sHeader .= '</LineStyle>' ."\n";
-      $this->sHeader .= '<PolyStyle>' ."\n";
-      $this->sHeader .= '<color>7d00ff00</color>' ."\n";
-      $this->sHeader .= '</PolyStyle>' ."\n";
-      $this->sHeader .= '</Style>' ."\n";
-
-      $this->sHeader .= '<Style id="transYellowPoly">' ."\n";
-      $this->sHeader .= '<LineStyle>' ."\n";
-      $this->sHeader .= '<width>1.5</width>' ."\n";
-      $this->sHeader .= '</LineStyle>' ."\n";
-      $this->sHeader .= '<PolyStyle>' ."\n";
-      $this->sHeader .= '<color>7d00ffff</color>' ."\n";
-      $this->sHeader .= '</PolyStyle>' ."\n";
-      $this->sHeader .= '</Style>' ."\n";
-*/
-
-      $this->sHeader .= '<Style id="auto_0">' . "\n";
-      $this->sHeader .= '<LineStyle>' ."\n";
-      $this->sHeader .= '<color>ff0000ff</color>' ."\n";
-      $this->sHeader .= '<width>4</width>' ."\n";
-      $this->sHeader .= '</LineStyle>' ."\n";
-      $this->sHeader .= '<PolyStyle>' ."\n";
-      $this->sHeader .= '<color>ff0000ff</color>' ."\n";
-      $this->sHeader .= '</PolyStyle>' ."\n";
-      $this->sHeader .= '</Style>' ."\n";
-      
-      $this->sHeader .= '<Style id="auto_1">' . "\n";
-      $this->sHeader .= '<LineStyle>' ."\n";
-      $this->sHeader .= '<color>ff0041ff</color>' ."\n";
-      $this->sHeader .= '<width>4</width>' ."\n";
-      $this->sHeader .= '</LineStyle>' ."\n";
-      $this->sHeader .= '<PolyStyle>' ."\n";
-      $this->sHeader .= '<color>ff0041ff</color>' ."\n";
-      $this->sHeader .= '</PolyStyle>' ."\n";
-      $this->sHeader .= '</Style>' ."\n";
-      
-      $this->sHeader .= '<Style id="auto_2">' . "\n";
-      $this->sHeader .= '<LineStyle>' ."\n";
-      $this->sHeader .= '<color>ff00a5ff</color>' ."\n";
-      $this->sHeader .= '<width>4</width>' ."\n";
-      $this->sHeader .= '</LineStyle>' ."\n";
-      $this->sHeader .= '<PolyStyle>' ."\n";
-      $this->sHeader .= '<color>ff00a5ff</color>' ."\n";
-      $this->sHeader .= '</PolyStyle>' ."\n";
-      $this->sHeader .= '</Style>' ."\n";
-      
-      $this->sHeader .= '<Style id="auto_3">' . "\n";
-      $this->sHeader .= '<LineStyle>' ."\n";
-      $this->sHeader .= '<color>ff00bbff</color>' ."\n";
-      $this->sHeader .= '<width>4</width>' ."\n";
-      $this->sHeader .= '</LineStyle>' ."\n";
-      $this->sHeader .= '<PolyStyle>' ."\n";
-      $this->sHeader .= '<color>ff00bbff</color>' ."\n";
-      $this->sHeader .= '</PolyStyle>' ."\n";
-      $this->sHeader .= '</Style>' ."\n";
-      
-      $this->sHeader .= '<Style id="auto_4">' . "\n";
-      $this->sHeader .= '<LineStyle>' ."\n";
-      $this->sHeader .= '<color>ff00ffff</color>' ."\n";
-      $this->sHeader .= '<width>4</width>' ."\n";
-      $this->sHeader .= '</LineStyle>' ."\n";
-      $this->sHeader .= '<PolyStyle>' ."\n";
-      $this->sHeader .= '<color>ff00ffff</color>' ."\n";
-      $this->sHeader .= '</PolyStyle>' ."\n";
-      $this->sHeader .= '</Style>' ."\n";
-      
-      $this->sHeader .= '<Style id="auto_5">' . "\n";
-      $this->sHeader .= '<LineStyle>' ."\n";
-      $this->sHeader .= '<color>ff00e4ca</color>' ."\n";
-      $this->sHeader .= '<width>4</width>' ."\n";
-      $this->sHeader .= '</LineStyle>' ."\n";
-      $this->sHeader .= '<PolyStyle>' ."\n";
-      $this->sHeader .= '<color>ff00e4ca</color>' ."\n";
-      $this->sHeader .= '</PolyStyle>' ."\n";
-      $this->sHeader .= '</Style>' ."\n";
-      
-      $this->sHeader .= '<Style id="auto_6">' . "\n";
-      $this->sHeader .= '<LineStyle>' ."\n";
-      $this->sHeader .= '<color>ff00b265</color>' ."\n";
-      $this->sHeader .= '<width>4</width>' ."\n";
-      $this->sHeader .= '</LineStyle>' ."\n";
-      $this->sHeader .= '<PolyStyle>' ."\n";
-      $this->sHeader .= '<color>ff00b265</color>' ."\n";
-      $this->sHeader .= '</PolyStyle>' ."\n";
-      $this->sHeader .= '</Style>' ."\n";
-      
-      $this->sHeader .= '<Style id="auto_7">' . "\n";
-      $this->sHeader .= '<LineStyle>' ."\n";
-      $this->sHeader .= '<color>ff008000</color>' ."\n";
-      $this->sHeader .= '<width>4</width>' ."\n";
-      $this->sHeader .= '</LineStyle>' ."\n";
-      $this->sHeader .= '<PolyStyle>' ."\n";
-      $this->sHeader .= '<color>ff008000</color>' ."\n";
-      $this->sHeader .= '</PolyStyle>' ."\n";
-      $this->sHeader .= '</Style>' ."\n";
-      
-      $this->sHeader .= '<Style id="auto_8">' . "\n";
-      $this->sHeader .= '<LineStyle>' ."\n";
-      $this->sHeader .= '<color>ff654d00</color>' ."\n";
-      $this->sHeader .= '<width>4</width>' ."\n";
-      $this->sHeader .= '</LineStyle>' ."\n";
-      $this->sHeader .= '<PolyStyle>' ."\n";
-      $this->sHeader .= '<color>ff654d00</color>' ."\n";
-      $this->sHeader .= '</PolyStyle>' ."\n";
-      $this->sHeader .= '</Style>' ."\n";
-      
-      $this->sHeader .= '<Style id="auto_9">' . "\n";
-      $this->sHeader .= '<LineStyle>' ."\n";
-      $this->sHeader .= '<color>ffff0000</color>' ."\n";
-      $this->sHeader .= '<width>4</width>' ."\n";
-      $this->sHeader .= '</LineStyle>' ."\n";
-      $this->sHeader .= '<PolyStyle>' ."\n";
-      $this->sHeader .= '<color>ffff0000</color>' ."\n";
-      $this->sHeader .= '</PolyStyle>' ."\n";
-      $this->sHeader .= '</Style>' ."\n";
-      
-      $this->sHeader .= '<Style id="auto_A">' . "\n";
-      $this->sHeader .= '<LineStyle>' ."\n";
-      $this->sHeader .= '<color>ffe00012</color>' ."\n";
-      $this->sHeader .= '<width>4</width>' ."\n";
-      $this->sHeader .= '</LineStyle>' ."\n";
-      $this->sHeader .= '<PolyStyle>' ."\n";
-      $this->sHeader .= '<color>ffe00012</color>' ."\n";
-      $this->sHeader .= '</PolyStyle>' ."\n";
-      $this->sHeader .= '</Style>' ."\n";
-      
-      $this->sHeader .= '<Style id="auto_B">' . "\n";
-      $this->sHeader .= '<LineStyle>' ."\n";
-      $this->sHeader .= '<color>ff82004b</color>' ."\n";
-      $this->sHeader .= '<width>4</width>' ."\n";
-      $this->sHeader .= '</LineStyle>' ."\n";
-      $this->sHeader .= '<PolyStyle>' ."\n";
-      $this->sHeader .= '<color>ff82004b</color>' ."\n";
-      $this->sHeader .= '</PolyStyle>' ."\n";
-      $this->sHeader .= '</Style>' ."\n";
-      
-      $this->sHeader .= '<Style id="auto_C">' . "\n";
-      $this->sHeader .= '<LineStyle>' ."\n";
-      $this->sHeader .= '<color>ff981a6c</color>' ."\n";
-      $this->sHeader .= '<width>4</width>' ."\n";
-      $this->sHeader .= '</LineStyle>' ."\n";
-      $this->sHeader .= '<PolyStyle>' ."\n";
-      $this->sHeader .= '<color>ff981a6c</color>' ."\n";
-      $this->sHeader .= '</PolyStyle>' ."\n";
-      $this->sHeader .= '</Style>' ."\n";
-      
-      $this->sHeader .= '<Style id="auto_D">' . "\n";
-      $this->sHeader .= '<LineStyle>' ."\n";
-      $this->sHeader .= '<color>ffc34ead</color>' ."\n";
-      $this->sHeader .= '<width>4</width>' ."\n";
-      $this->sHeader .= '</LineStyle>' ."\n";
-      $this->sHeader .= '<PolyStyle>' ."\n";
-      $this->sHeader .= '<color>ffc34ead</color>' ."\n";
-      $this->sHeader .= '</PolyStyle>' ."\n";
-      $this->sHeader .= '</Style>' ."\n";
-      
-      $this->sHeader .= '<Style id="auto_E">' . "\n";
-      $this->sHeader .= '<LineStyle>' ."\n";
-      $this->sHeader .= '<color>ffee82ee</color>' ."\n";
-      $this->sHeader .= '<width>4</width>' ."\n";
-      $this->sHeader .= '</LineStyle>' ."\n";
-      $this->sHeader .= '<PolyStyle>' ."\n";
-      $this->sHeader .= '<color>ffee82ee</color>' ."\n";
-      $this->sHeader .= '</PolyStyle>' ."\n";
-      $this->sHeader .= '</Style>' ."\n";
+      $this->sHeader .= $this->export_all_styles();
 
 		$this->sHeader .= '<Folder>' . "\n";
-      if (!empty($tags['name'])) {
-         $this->sHeader .= sprintf('<name>%s</name>',$tags['name']) . "\n";
-      } else {
+
+      if (!key_exists('name', $properties)) {
          $this->sHeader .= '<name>Paths</name>' . "\n";
       }
-      $this->sHeader .= '<visibility>1</visibility>' . "\n";
-      $this->sHeader .= "<description>$sName</description>" . "\n";
+
+      if (!key_exists('visibility', $properties)) {
+         $this->sHeader .= '<visibility>1</visibility>' . "\n";
+      }
+
+      if (!key_exists('description', $properties)) {
+         //$this->sHeader .= "<description>$sName</description>" . "\n";
+		   $this->sHeader .= "<description><![CDATA[" . $sName . "]]>" . "</description>" . "\n";
+      }
+
+      foreach ($properties as $key => $property) {
+         if (in_array( $key, array('description','name'))) {
+		      $this->sHeader .= sprintf('<%s><![CDATA[%s]]></%s>\n',$key, $property ,$key);
+         } else {
+            $this->sHeader .= sprintf('<%s>%s</%s>\n',$key, $property ,$key);
+         }  
+      }
 
 		$this->sFooter .= '</Folder>' . "\n";
 		$this->sFooter .= "</Document>" . "\n";
 		$this->sFooter .= '</kml>' . "\n";
 	}
 
-   private function add_style() {
-      
-      $style_icon
-      $style_id
-      $width=2;
+   public function add_icon_style($attr) {
+/* pseudo:
+      array(
+      $id='startIcon';
+      $url='http://live.synctrace.com/icons/busstopblue.png';
+      $width=2;)
+*/
+      foreach($attr as $key => $style) {
+         if (!empty($style['id']) && !empty($style['image_url']) && !empty($style['width'])){
+            $sStyle  = sprintf('<Style id="%s">\n',$style['id']);
+            $sStyle .= '<IconStyle>'. "\n";
+            $sStyle .= '<Icon>'. "\n";
+            $sStyle .= sprintf('<href>%s</href>\n',$style['image_url']);
+            $sStyle .= '</Icon>'. "\n";
+            $sStyle .= '</IconStyle>'. "\n";
+            $sStyle .= '<LineStyle>'. "\n";
+            $sStyle .= sprintf('<width>%s</width>\n',$style['width']);
+            $sStyle .= '</LineStyle>'. "\n";
+            $sStyle .= '</Style>'. "\n";
+         }
+      }
 
-      $sStyle = '<Style id="startIcon">'. "\n";
-      $sStyle .= '<IconStyle>'. "\n";
-      $sStyle .= '<Icon>'. "\n";
-      $sStyle .= '<href>http://live.synctrace.com/icons/busstopblue.png</href>'. "\n";
-      $sStyle .= '</Icon>'. "\n";
-      $sStyle .= '</IconStyle>'. "\n";
-      $sStyle .= '<LineStyle>'. "\n";
-      $sStyle .= '<width>2</width>'. "\n";
-      $sStyle .= '</LineStyle>'. "\n";
-      $sStyle .= '</Style>'. "\n";
+      $this->styles[]=$sStyle;
+   }
+
+   public function add_poly_style($attr) {
+/* pseudo:
+      array(
+      $id='startIcon';
+      $url='http://live.synctrace.com/icons/busstopblue.png';
+      $width=2;)
+*/
+      foreach($attr as $key => $style) {
+         if (!empty($style['id']) && !empty($style['color']) && !empty($style['width'])){
+            $sStyle  = sprintf('<Style id="%s">\n',$style['id']);
+            $sStyle .= '<LineStyle>' ."\n";
+            $sStyle .= sprintf('<color>%s</color>\n',$style['color']);
+            $sStyle .= sprintf('<width>%s</width>\n',$style['width']);
+            $sStyle .= '</LineStyle>' ."\n";
+            $sStyle .= '<PolyStyle>' ."\n";
+            $sStyle .= sprintf('<color>%s</color>\n',(isset($style['polycolor']) ? $style['polycolor'] : $style['color']) );
+            $sStyle .= '</PolyStyle>' ."\n";
+            $sStyle .= '</Style>' ."\n";
+         }
+      }
+
+      $this->styles[]=$sStyle;
+   }
+
+   private function export_all_styles() {
+      $style="";
+      foreach ( $this->styles as $key => $style ){
+         $style .= $style;
+      }
+      return $style;
+   }
+
+   public function add_line_style($attr) {
+/* pseudo:
+      array(
+      $id='startIcon';
+      $url='http://live.synctrace.com/icons/busstopblue.png';
+      $width=2;)
+*/
+      foreach($attr as $key => $style) {
+         if (!empty($style['id']) && !empty($style['color']) && !empty($style['width'])){
+            $sStyle  = sprintf('<Style id="%s">\n',$style['id']);
+            $sStyle .= '<LineStyle>'."\n";
+            $sStyle .= sprintf('<color>%s</color>\n',$style['color']);
+            $sStyle .= sprintf('<width>%s</width>\n',$style['width']);
+            $sStyle .= '</LineStyle>'."\n";
+            $sStyle .= '</Style>' . "\n";
+         }
+      }
 
       $this->styles[]=$sStyle;
    }
 	/**
+	/**
 	 * Add element to kml file
 	 */
-	function addElement($sElement) {
+	private function add_element($sElement) {
 		$this->sBody .= $sElement;
 	}
 	/**
 	 * Print kml, change the header to open Google earth
 	 */
-	function export($filename) {
+	public function export($filename) {
 		if($filename) {
 			$this->sName=$filename;
 		}
@@ -607,9 +330,8 @@ class kml {
 	 */
 
 	function addPoint($lon, $lat, $alt, $user_options , $sLayer = '') {
-//print_r($user_options); 
- //print_r($user_options); exit;
-      // echo " GLENN \n";
+      //print_r($user_options); 
+      //print_r($user_options); exit;
       if(!isset($lon) or !isset($lat)) { return null; }
 
       $this->point_counter++;
@@ -649,7 +371,7 @@ class kml {
 		$sResponse .= "<coordinates>$lon,$lat,$alt</coordinates>" . "\n";
 		$sResponse .= '</Point>' . "\n";
 		$sResponse .= '</Placemark>' . "\n";
-		$this->addElement($sResponse);
+		$this->add_element($sResponse);
 	}
 	/**
 	 * Add line to kml file
@@ -669,7 +391,7 @@ class kml {
 		   $sResponse .= '</MultiGeometry>' . "\n";
          $this->multi_open=0;
       }
-		$this->addElement($sResponse);
+		$this->add_element($sResponse);
    }
 
 	function addLine($coordinates, $user_options , $sLayer = '') {
@@ -741,7 +463,7 @@ class kml {
 		$sResponse .= " </coordinates>". "\n";
 		$sResponse .= "</LineString>". "\n";
 		$sResponse .= "</Placemark>". "\n";
-		$this->addElement($sResponse);
+		$this->add_element($sResponse);
 	}
 	/**
 	 * Add Polygon
@@ -775,7 +497,7 @@ class kml {
 							</Polygon>
 						</Placemark>
 					". "\n" ;
-		$this->addElement($sResponse);
+		$this->add_element($sResponse);
 	}
 	/**
 	 * Add Link
@@ -797,7 +519,7 @@ class kml {
 				</Url>
 				</NetworkLink>";
 		//echo $sResponse;
-		$this->addElement($sResponse);
+		$this->add_element($sResponse);
 	}
 	/**
 	 * Add SreenOverlay
@@ -820,7 +542,7 @@ class kml {
 	<size x=\"0.1\" y=\"0.1\" xunits=\"fraction\" yunits=\"fraction\"/>
 	</ScreenOverlay>";
 		//echo $sResponse;
-		$this->addElement($sResponse);
+		$this->add_element($sResponse);
 	}
 }
 ?>
