@@ -23,13 +23,21 @@ class kml {
 
    private $multi_open=0;
 
+   private $styles=array();
+
+   private $settings= array(
+         'debug' => 0,
+         'verbose' => 0
+    );
+
+
 	/**
 	 * Constructor
 	 */
 	function __construct($sName, $tags) {
 		$this->sName = $sName;
 		$this->sHeader = '<?xml version="1.0" encoding="utf-8"?>' . "\n";
-		// $this->sHeader .= '<kml xmlns="http://earth.google.com/kml/2.0">' . "\n";
+		// $this->sHeader .= '<kml xmlns="http://earth.google.com/kml/2.0">' . "\n"; -> This makes stuff fail in google earth at the time
       if ($this->gx) {
 		   $this->sHeader .= '<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2">' . "\n";
       } else {
@@ -41,8 +49,9 @@ class kml {
 		$this->sHeader .= "<open>1</open>" . "\n" ;
 		//$this->sHeader .= "<description>Description</description>"  . "\n";
 		$this->sHeader .= "<description><![CDATA[" . $sName . "]]>" . "</description>" . "\n";
+
 		/** This is in styles.kml now: see: -> doesn't work
-   http://code.google.com/p/kml-samples/source/browse/trunk/kml/Style/styles.kml?spec=svn115&r=115
+      http://code.google.com/p/kml-samples/source/browse/trunk/kml/Style/styles.kml?spec=svn115&r=115
 
 		 * To change the style generate kml in google eath y paste in the next
 		 * line the header style.
@@ -457,6 +466,26 @@ class kml {
 		$this->sFooter .= "</Document>" . "\n";
 		$this->sFooter .= '</kml>' . "\n";
 	}
+
+   private function add_style() {
+      
+      $style_icon
+      $style_id
+      $width=2;
+
+      $sStyle = '<Style id="startIcon">'. "\n";
+      $sStyle .= '<IconStyle>'. "\n";
+      $sStyle .= '<Icon>'. "\n";
+      $sStyle .= '<href>http://live.synctrace.com/icons/busstopblue.png</href>'. "\n";
+      $sStyle .= '</Icon>'. "\n";
+      $sStyle .= '</IconStyle>'. "\n";
+      $sStyle .= '<LineStyle>'. "\n";
+      $sStyle .= '<width>2</width>'. "\n";
+      $sStyle .= '</LineStyle>'. "\n";
+      $sStyle .= '</Style>'. "\n";
+
+      $this->styles[]=$sStyle;
+   }
 	/**
 	 * Add element to kml file
 	 */
@@ -491,12 +520,10 @@ class kml {
 		if(strlen($filename)>0) {
 			$this->sName=$filename;
 		}
-         // trigger_error($filename);
+      // trigger_error($filename);
 		//debug($this->getCurrentDirectory());
 		$myfile=$this->getCurrentDirectory() . '/output/'.$filename.".kml";
-		// debug($myfile);
-      // trigger_error($myfile);
-      // trigger_error($myfile);
+
 		$tempf = @fopen($myfile, 'w');
 		if(!$tempf) {
 			return;
