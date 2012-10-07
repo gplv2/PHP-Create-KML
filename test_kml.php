@@ -15,7 +15,7 @@ $kml = new kml('my_test_doc_name', array('name'=> 'testing','glenn'=>'is cool'),
 
 foreach ($array as $key=>$val) {
    $pointStyle="startIcon";
-   $kml->addPoint($val['lon'], $val['lat'], 0 , $options = array('description' => $val['halte_label']), $pointStyle );
+   $kml->addPoint($val['lon'], $val['lat'], 0 , $options = array('title' => $val['halte_label'] , 'description' => $val['halte_label']), $pointStyle );
 }
 
 $parsedfile=$kml->export('testfile.kml');
