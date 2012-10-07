@@ -14,7 +14,7 @@ require_once('class.kml2.php');
 $kml = new kml('my_test_doc_name', array('name'=> 'testing','glenn'=>'is cool'), array('icon_styles' => $custom_styles));
 
 foreach ($array as $key=>$val) {
-   $pointStyle="startIcon";
+   $pointStyle="StartIcon";
    $kml->addPoint($val['lon'], $val['lat'], 0 , $options = array('title' => $val['halte_label'] , 'description' => $val['halte_label']), $pointStyle );
 }
 
