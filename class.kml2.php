@@ -140,7 +140,7 @@ class kml {
          $this->sHeader .= "<description><![CDATA[" . $sName . "]]>" . "</description>" . "\n";
       }
 
-/*
+      //print_r($properties); exit;
       foreach ($properties as $key => $property) {
          if (in_array( $key, array('description','name'))) {
             $this->sHeader .= sprintf('<%s><![CDATA[%s]]></%s>%s',$key, $property ,$key,"\n");
@@ -148,7 +148,6 @@ class kml {
             $this->sHeader .= sprintf('<%s>%s</%s>%s',$key, $property ,$key, "\n");
          }  
       }
-*/
 
       $this->sFooter .= '</Folder>' . "\n";
       $this->sFooter .= "</Document>" . "\n";
