@@ -6,8 +6,6 @@ EOD;
 
 $array=json_decode($json,true);
 
-$prev_rec=array();
-
 $custom_styles = array(
    array('id'=> 'StartIcon','image_url'=> 'http://live.synctrace.com/icons/busstopblue.png','width'=> 2)
 );
@@ -18,7 +16,6 @@ $kml = new kml('my_test_doc_name', array('name'=> 'testing','glenn'=>'is cool'),
 foreach ($array as $key=>$val) {
    $pointStyle="startIcon";
    $kml->addPoint($val['lon'], $val['lat'], 0 , $options = array('description' => $val['halte_label']), $pointStyle );
-   $prev_rec = $val;
 }
 
 $parsedfile=$kml->export('testfile.kml');
