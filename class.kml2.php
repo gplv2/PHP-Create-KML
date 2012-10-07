@@ -365,7 +365,7 @@ class kml {
     * @param string $sLayer style of point default ''
     */
 
-   function addPoint($lon, $lat, $alt, $user_options , $sLayer = '') {
+   function addPoint($lon, $lat, $alt=0, $user_options , $sLayer = '') {
       //print_r($user_options); 
       //print_r($user_options); exit;
       if(!isset($lon) or !isset($lat)) { return null; }
