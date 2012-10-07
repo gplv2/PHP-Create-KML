@@ -7,7 +7,7 @@
  * http://googlemapsapi.blogspot.com/2007/06/validate-your-kml-online-or-offline.html
  *
  * @author pablo kogan
- * @ Modded by Glenn
+ * @modded extensively by Glenn Plas
  *
  */
 class kml {
