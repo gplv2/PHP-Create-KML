@@ -11,9 +11,9 @@
  *
  */
 class kml {
-	private $sHeader;
-	private $sBody;
-	private $sFooter;
+   private $sHeader;
+   private $sBody;
+   private $sFooter;
    private $sName;
 
    private $point_counter=0;
@@ -36,31 +36,31 @@ class kml {
     );
 
 
-	/**
-	 * Constructor
+   /**
+    * Constructor
       new $kml('my_doc_name', array('name'=> 'testing', array('id'=> 'StartIcon','url'=> 'http://live.synctrace.com/icons/busstopblue.png','width'=> 2))
-	 */
-	public function __construct($sName, $properties=array(), $options=array()) {
+    */
+   public function __construct($sName, $properties=array(), $options=array()) {
       if(count($options)) {
          $this->$settings = array_merge($this->settings, $options);
       }
 
-		$this->sName = $sName;
-		$this->sHeader = '<?xml version="1.0" encoding="utf-8"?>' . "\n";
-		// $this->sHeader .= '<kml xmlns="http://earth.google.com/kml/2.0">' . "\n"; -> This makes stuff fail in google earth at the time
+      $this->sName = $sName;
+      $this->sHeader = '<?xml version="1.0" encoding="utf-8"?>' . "\n";
+      // $this->sHeader .= '<kml xmlns="http://earth.google.com/kml/2.0">' . "\n"; -> This makes stuff fail in google earth at the time
       if ($this->gx) {
-		   $this->sHeader .= '<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2">' . "\n";
+         $this->sHeader .= '<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2">' . "\n";
       } else {
-		   $this->sHeader .= '<kml xmlns="http://www.opengis.net/kml/2.2">' . "\n";
+         $this->sHeader .= '<kml xmlns="http://www.opengis.net/kml/2.2">' . "\n";
       }
 
-		$this->sHeader .= "<Document>" . "\n" ;
-		$this->sHeader .= "<name>$sName</name>" . "\n" ;
-		$this->sHeader .= "<open>1</open>" . "\n" ;
-		$this->sHeader .= "<description><![CDATA[" . $sName . "]]>" . "</description>" . "\n";
+      $this->sHeader .= "<Document>" . "\n" ;
+      $this->sHeader .= "<name>$sName</name>" . "\n" ;
+      $this->sHeader .= "<open>1</open>" . "\n" ;
+      $this->sHeader .= "<description><![CDATA[" . $sName . "]]>" . "</description>" . "\n";
 
-		//$this->sHeader .= "<description>Description</description>"  . "\n";
-		/** http://code.google.com/p/kml-samples/source/browse/trunk/kml/Style/styles.kml?spec=svn115&r=115 */
+      //$this->sHeader .= "<description>Description</description>"  . "\n";
+      /** http://code.google.com/p/kml-samples/source/browse/trunk/kml/Style/styles.kml?spec=svn115&r=115 */
       
       if(!empty($this->settings['load_default_line_styles'])) {
          $default_line_styles = array(
@@ -123,7 +123,7 @@ class kml {
          $this->sHeader .= $this->export_all_styles();
       }
 
-		$this->sHeader .= '<Folder>' . "\n";
+      $this->sHeader .= '<Folder>' . "\n";
 
       if (!key_exists('name', $properties)) {
          $this->sHeader .= '<name>Paths</name>' . "\n";
@@ -135,21 +135,21 @@ class kml {
 
       if (!key_exists('description', $properties)) {
          //$this->sHeader .= "<description>$sName</description>" . "\n";
-		   $this->sHeader .= "<description><![CDATA[" . $sName . "]]>" . "</description>" . "\n";
+         $this->sHeader .= "<description><![CDATA[" . $sName . "]]>" . "</description>" . "\n";
       }
 
       foreach ($properties as $key => $property) {
          if (in_array( $key, array('description','name'))) {
-		      $this->sHeader .= sprintf('<%s><![CDATA[%s]]></%s>\n',$key, $property ,$key);
+            $this->sHeader .= sprintf('<%s><![CDATA[%s]]></%s>\n',$key, $property ,$key);
          } else {
             $this->sHeader .= sprintf('<%s>%s</%s>\n',$key, $property ,$key);
          }  
       }
 
-		$this->sFooter .= '</Folder>' . "\n";
-		$this->sFooter .= "</Document>" . "\n";
-		$this->sFooter .= '</kml>' . "\n";
-	}
+      $this->sFooter .= '</Folder>' . "\n";
+      $this->sFooter .= "</Document>" . "\n";
+      $this->sFooter .= '</kml>' . "\n";
+   }
 
    public function add_icon_style($attr) {
 /* pseudo:
@@ -230,133 +230,133 @@ class kml {
       return $style;
    }
 
-	/**
-	/**
-	 * Add element to kml file
-	 */
-	private function add_element($sElement) {
-		$this->sBody .= $sElement;
-	}
-	/**
-	 * Print kml, change the header to open Google earth
-	 */
-	public function export($filename) {
-		if($filename) {
-			$this->sName=$filename;
-		}
-		header('Content-type: text/xml');
-		header('Content-type: application/vnd.google-earth.kml+xml');
-		//header('Content-Disposition: attachement; filename="' . $this->sName . '.kml"');
-		//header('Content-Length: ' . strlen($sKml));
-		header('Expires: 0');
-		header('Pragma: cache');
-		header('Cache-Control: private');
+   /**
+   /**
+    * Add element to kml file
+    */
+   private function add_element($sElement) {
+      $this->sBody .= $sElement;
+   }
+   /**
+    * Print kml, change the header to open Google earth
+    */
+   public function export($filename) {
+      if($filename) {
+         $this->sName=$filename;
+      }
+      header('Content-type: text/xml');
+      header('Content-type: application/vnd.google-earth.kml+xml');
+      //header('Content-Disposition: attachement; filename="' . $this->sName . '.kml"');
+      //header('Content-Length: ' . strlen($sKml));
+      header('Expires: 0');
+      header('Pragma: cache');
+      header('Cache-Control: private');
 
-		//header('Content-type: application/keyhole');
-		header('Content-Disposition:atachment; filename="' . $filename. '.kml"');
-		$sKml = $this->sHeader . $this->sBody . $this->sFooter;
-		// header('Content-Length: ' . strlen($sKml));
-		echo $sKml;
-	}
-	/**
-	 * Save the file locally to postprocess it
-	 */
-	function exportlocal($filename) {
-		if(strlen($filename)>0) {
-			$this->sName=$filename;
-		}
+      //header('Content-type: application/keyhole');
+      header('Content-Disposition:atachment; filename="' . $filename. '.kml"');
+      $sKml = $this->sHeader . $this->sBody . $this->sFooter;
+      // header('Content-Length: ' . strlen($sKml));
+      echo $sKml;
+   }
+   /**
+    * Save the file locally to postprocess it
+    */
+   function exportlocal($filename) {
+      if(strlen($filename)>0) {
+         $this->sName=$filename;
+      }
       // trigger_error($filename);
-		//debug($this->getCurrentDirectory());
+      //debug($this->getCurrentDirectory());
 
       if (!empty($this->settings['output_dir'])) {
-		   $myfile=$this->getCurrentDirectory() . '/' . $this->settings['output_dir'] . '/'.$filename.".kml";
+         $myfile=$this->getCurrentDirectory() . '/' . $this->settings['output_dir'] . '/'.$filename.".kml";
       } else {
-		   $myfile=$this->getCurrentDirectory() . '/'.$filename.".kml";
+         $myfile=$this->getCurrentDirectory() . '/'.$filename.".kml";
       }
 
-		$tempf = @fopen($myfile, 'w');
-		if(!$tempf) {
-			return;
-		} else {
-			$sKml = $this->sHeader . $this->sBody . $this->sFooter;
-			fputs($tempf, $sKml);
-		}
-   	if(!fclose($tempf)) {
-      	//echo "Error! Couldn't close the file.";
-		}
-		return($myfile);
-	}
+      $tempf = @fopen($myfile, 'w');
+      if(!$tempf) {
+         return;
+      } else {
+         $sKml = $this->sHeader . $this->sBody . $this->sFooter;
+         fputs($tempf, $sKml);
+      }
+      if(!fclose($tempf)) {
+         //echo "Error! Couldn't close the file.";
+      }
+      return($myfile);
+   }
 
-	function getCurrentDirectory() {
+   function getCurrentDirectory() {
       if(defined('STDIN')) {
          return getcwd();
       } else {
- 		   return $_SERVER['DOCUMENT_ROOT'] ;
+         return $_SERVER['DOCUMENT_ROOT'] ;
       }
-	} 
+   } 
 
-	/**
-	 * Save localally, parse with command line tool and hand back as gml
-	 */
-	function exportgml($filename) {
-		$parsedfile=$this->exportlocal($filename);
+   /**
+    * Save localally, parse with command line tool and hand back as gml
+    */
+   function exportgml($filename) {
+      $parsedfile=$this->exportlocal($filename);
       if (strlen($parsedfile)<=0) {
          trigger_error("File name empty!");
          return;
       }
-		// Call command line tools
+      // Call command line tools
 /* pre 5.3 this worked
-		$output=array();
-		$retval=null;
-		exec("/bin/sed 's/ xmlns=\"http\:\/\/earth.google.com\/kml\/2.0\"//' " . $parsedfile . " > " . $parsedfile ."_post",&$output,&$retval);
-		exec("/usr/bin/xsltproc -o " . $parsedfile . ".gml ". $this->getCurrentDirectory() ."kml2gml.xsl " . $parsedfile . "_post",&$output,&$retval);
-		//debug($this->getCurrentDirectory());
+      $output=array();
+      $retval=null;
+      exec("/bin/sed 's/ xmlns=\"http\:\/\/earth.google.com\/kml\/2.0\"//' " . $parsedfile . " > " . $parsedfile ."_post",&$output,&$retval);
+      exec("/usr/bin/xsltproc -o " . $parsedfile . ".gml ". $this->getCurrentDirectory() ."kml2gml.xsl " . $parsedfile . "_post",&$output,&$retval);
+      //debug($this->getCurrentDirectory());
 */
 
 /* post 5.3 this does it */
-		$cmd="/bin/sed 's/ xmlns=\"http\:\/\/earth.google.com\/kml\/2.2\"//' " . $parsedfile . " > " . $parsedfile ."_post";
+      $cmd="/bin/sed 's/ xmlns=\"http\:\/\/earth.google.com\/kml\/2.2\"//' " . $parsedfile . " > " . $parsedfile ."_post";
       // echo $cmd . "\n";
-		exec($cmd);
-		$xslt="/usr/bin/xsltproc -o " . $parsedfile . ".gml ". $this->getCurrentDirectory() ."/kml2gml.xsl " . $parsedfile . "_post";
+      exec($cmd);
+      $xslt="/usr/bin/xsltproc -o " . $parsedfile . ".gml ". $this->getCurrentDirectory() ."/kml2gml.xsl " . $parsedfile . "_post";
       // echo $xslt . "\n";
-		exec($xslt);
-		//debug($this->getCurrentDirectory());
+      exec($xslt);
+      //debug($this->getCurrentDirectory());
 
-		// Clean up
-		unlink($parsedfile ."_post");
-		unlink($parsedfile);
+      // Clean up
+      unlink($parsedfile ."_post");
+      unlink($parsedfile);
 
-		$content=null;
-		$tempf = @fopen($parsedfile.".gml", 'r');
-		if ($tempf) {
-    		while (!feof($tempf)) {
-        		$buffer = fgets($tempf, 4096);
-        		$content.=$buffer;
-    		}
-    		fclose($tempf);
-		}
+      $content=null;
+      $tempf = @fopen($parsedfile.".gml", 'r');
+      if ($tempf) {
+         while (!feof($tempf)) {
+            $buffer = fgets($tempf, 4096);
+            $content.=$buffer;
+         }
+         fclose($tempf);
+      }
 
-		header('Content-type: application/keyhole');
-		header('Content-Disposition:atachment; filename="' . $filename. '.gml"');
-		header('Content-Length: ' . strlen($content));
-		header('Expires: 0');
-		header('Pragma: cache');
-		header('Cache-Control: private');
-		echo $content;
-		//return($filename);
-	}
-	/**
-	/**
-	 * Add point to kml file
-	 * @param int $lat latitude
-	 * @param int $lon longitude
-	 * @param int $alt altitude
-	 * @param string $tit title of point
-	 * @param string $des description of point
-	 * @param string $sLayer style of point default ''
-	 */
+      header('Content-type: application/keyhole');
+      header('Content-Disposition:atachment; filename="' . $filename. '.gml"');
+      header('Content-Length: ' . strlen($content));
+      header('Expires: 0');
+      header('Pragma: cache');
+      header('Cache-Control: private');
+      echo $content;
+      //return($filename);
+   }
+   /**
+   /**
+    * Add point to kml file
+    * @param int $lat latitude
+    * @param int $lon longitude
+    * @param int $alt altitude
+    * @param string $tit title of point
+    * @param string $des description of point
+    * @param string $sLayer style of point default ''
+    */
 
-	function addPoint($lon, $lat, $alt, $user_options , $sLayer = '') {
+   function addPoint($lon, $lat, $alt, $user_options , $sLayer = '') {
       //print_r($user_options); 
       //print_r($user_options); exit;
       if(!isset($lon) or !isset($lat)) { return null; }
@@ -366,7 +366,7 @@ class kml {
       $defaults =  array('title' => 'PointTitle', 'description' => 'PointDescription' , 'heading' => 0, 'altitude' =>0, 'visibility' => 1, 'altitude' =>0, 'range' => 150, 'tilt' => 60, 'altitudemode' =>'clampToGround', 'tessellate' => 1, 'extrude' => 1);
       $options = array_merge($defaults, $user_options);
 
-		$sResponse = '<Placemark id="po_'. $this->point_counter . '">' . "\n";
+      $sResponse = '<Placemark id="po_'. $this->point_counter . '">' . "\n";
       if(isset($options['timestamp'])){
          $sResponse .= "<TimeStamp><when>" .$options['timestamp'] . "</when></TimeStamp>" . "\n";
          if (!empty($options['begin'])) {
@@ -379,49 +379,49 @@ class kml {
          }
       }
 
-		//$sResponse .= "<description><![CDATA[" . $options['description'] . "]]>" . "</description>" . "\n";
+      //$sResponse .= "<description><![CDATA[" . $options['description'] . "]]>" . "</description>" . "\n";
       if(isset($options['title'])){
-		   $sResponse .= "<name>". $options['title'] ."</name>" . "\n";
+         $sResponse .= "<name>". $options['title'] ."</name>" . "\n";
       }
       if(isset($options['description'])){
-		   $sResponse .= "<description><![CDATA[" . $options['description'] . "]]>" . "</description>" . "\n";
+         $sResponse .= "<description><![CDATA[" . $options['description'] . "]]>" . "</description>" . "\n";
       }
       if(isset($options['visibility'])){
-		   $sResponse .= '<visibility>1</visibility>' . "\n";
+         $sResponse .= '<visibility>1</visibility>' . "\n";
       }
-		$sResponse .= "<styleUrl>#$sLayer</styleUrl>" . "\n";
-		$sResponse .= '<Point>' . "\n";
+      $sResponse .= "<styleUrl>#$sLayer</styleUrl>" . "\n";
+      $sResponse .= '<Point>' . "\n";
       if(isset($options['visibility'])){
-		   $sResponse .= "<tessellate>". $options['tessellate']  ."</tessellate>" . "\n";
+         $sResponse .= "<tessellate>". $options['tessellate']  ."</tessellate>" . "\n";
       }
-		//$sResponse .= "<extrude>". $options['extrude'] ."</extrude>" . "\n";
-		$sResponse .= "<coordinates>$lon,$lat,$alt</coordinates>" . "\n";
-		$sResponse .= '</Point>' . "\n";
-		$sResponse .= '</Placemark>' . "\n";
-		$this->add_element($sResponse);
-	}
-	/**
-	 * Add line to kml file
-	 * @param array $coordinates poits of line array of array('lat'=>num,'lon'=>num,'alt'=num)
-	 * @param string $tit title of line
-	 * @param string $des description of line
-	 * @param string $sLayer style of line default ''
-	 */
+      //$sResponse .= "<extrude>". $options['extrude'] ."</extrude>" . "\n";
+      $sResponse .= "<coordinates>$lon,$lat,$alt</coordinates>" . "\n";
+      $sResponse .= '</Point>' . "\n";
+      $sResponse .= '</Placemark>' . "\n";
+      $this->add_element($sResponse);
+   }
+   /**
+    * Add line to kml file
+    * @param array $coordinates poits of line array of array('lat'=>num,'lon'=>num,'alt'=num)
+    * @param string $tit title of line
+    * @param string $des description of line
+    * @param string $sLayer style of line default ''
+    */
 
-	public function setMultiGeometry($state) {
+   public function setMultiGeometry($state) {
       // return "";
-		$sResponse = '';
+      $sResponse = '';
       if ($state==1) {
-		   $sResponse .= '<MultiGeometry>' . "\n";
+         $sResponse .= '<MultiGeometry>' . "\n";
          $this->multi_open=1;
       } else {
-		   $sResponse .= '</MultiGeometry>' . "\n";
+         $sResponse .= '</MultiGeometry>' . "\n";
          $this->multi_open=0;
       }
-		$this->add_element($sResponse);
+      $this->add_element($sResponse);
    }
 
-	function addLine($coordinates, $user_options , $sLayer = '') {
+   function addLine($coordinates, $user_options , $sLayer = '') {
 // print_r($user_options); exit;
       if(!isset($coordinates)) { return null; }
 
@@ -447,19 +447,19 @@ class kml {
       // Take the middle position
       $middle = round(count($coordinates)/2,0);
 
-		$sResponse = '<Placemark id="pm_'. $this->line_counter . '">' . "\n";
+      $sResponse = '<Placemark id="pm_'. $this->line_counter . '">' . "\n";
 
       if(isset($options['timestamp'])){
          $sResponse .= "<TimeStamp><when>" .$options['timestamp'] . "</when></TimeStamp>" . "\n";
       }
       if(isset($options['title'])){
-		   $sResponse .= "<name>". $options['title'] ."</name>" . "\n";
+         $sResponse .= "<name>". $options['title'] ."</name>" . "\n";
       }
       if(isset($options['description'])){
-		   $sResponse .= "<description><![CDATA[" . $options['description'] . "]]>" . "</description>" . "\n";
+         $sResponse .= "<description><![CDATA[" . $options['description'] . "]]>" . "</description>" . "\n";
       }
       if(isset($options['visibility'])){
-		   $sResponse .= '<visibility>'. $options['visibility'] .'</visibility>' . "\n";
+         $sResponse .= '<visibility>'. $options['visibility'] .'</visibility>' . "\n";
       }
       $sResponse .= "<LookAt id=\"la_". $this->line_counter . "\">" ."\n";
 
@@ -472,104 +472,104 @@ class kml {
       $sResponse .= "<heading>" . $options['heading'] . "</heading>" . "\n";
       $sResponse .= "<altitudeMode>" . $options['altitudemode'] . "</altitudeMode>" . "\n";
       $sResponse .= "</LookAt>" . "\n";
-		$sResponse .= "<styleUrl>#$sLayer</styleUrl>" . "\n";
-		$sResponse .= "<LineString>" . "\n";
+      $sResponse .= "<styleUrl>#$sLayer</styleUrl>" . "\n";
+      $sResponse .= "<LineString>" . "\n";
 
-		$sResponse .= "<tessellate>". $options['tessellate']  ."</tessellate>" . "\n";
-		$sResponse .= "<extrude>". $options['extrude'] ."</extrude>" . "\n";
+      $sResponse .= "<tessellate>". $options['tessellate']  ."</tessellate>" . "\n";
+      $sResponse .= "<extrude>". $options['extrude'] ."</extrude>" . "\n";
 
-		$sResponse .= "<coordinates> ". "\n";
-		$first = true;
-		foreach ($coordinates as $key => $point) {
-			if ($first) {
-				$sResponse .= $point['lon'] . "," . $point['lat'] . "," . $point['alt'];
-				$first = false;
-			} else
-				$sResponse .= " " . $point['lon'] . "," . $point['lat'] . "," . $point['alt'];
-		}
-		$sResponse .= " </coordinates>". "\n";
-		$sResponse .= "</LineString>". "\n";
-		$sResponse .= "</Placemark>". "\n";
-		$this->add_element($sResponse);
-	}
-	/**
-	 * Add Polygon
-	 * @param array $coordinates poits of polygon array of array('lat'=>num,'lon'=>num,'alt'=num)
-	 * @param string $tit title of polygon
-	 * @param string $des description of polygon
-	 * @param string $sLayer style of polygon default ''
-	*/
-	function addPolygon($coordinates, $tit, $des, $sLayer = '') {
+      $sResponse .= "<coordinates> ". "\n";
+      $first = true;
+      foreach ($coordinates as $key => $point) {
+         if ($first) {
+            $sResponse .= $point['lon'] . "," . $point['lat'] . "," . $point['alt'];
+            $first = false;
+         } else
+            $sResponse .= " " . $point['lon'] . "," . $point['lat'] . "," . $point['alt'];
+      }
+      $sResponse .= " </coordinates>". "\n";
+      $sResponse .= "</LineString>". "\n";
+      $sResponse .= "</Placemark>". "\n";
+      $this->add_element($sResponse);
+   }
+   /**
+    * Add Polygon
+    * @param array $coordinates poits of polygon array of array('lat'=>num,'lon'=>num,'alt'=num)
+    * @param string $tit title of polygon
+    * @param string $des description of polygon
+    * @param string $sLayer style of polygon default ''
+   */
+   function addPolygon($coordinates, $tit, $des, $sLayer = '') {
 
-		$sResponse = "<Placemark>";
-		$sResponse .= "<name>$tit</name>";
-		$sResponse .= "<styleUrl>#$sLayer</styleUrl>";
-		$sResponse .= "<Polygon>";
-		$sResponse .= "<tessellate>1</tessellate>";
-		$sResponse .= "<outerBoundaryIs>
-									<LinearRing>
-										<coordinates>
-					";
-		$first = true;
-		foreach ($coordinates as $key => $point) {
-			if ($first) {
-				$sResponse .= $point['lon'] . "," . $point['lat'] . "," . $point['alt'];
-				$first = false;
-			} else
-				$sResponse .= " " . $point['lon'] . "," . $point['lat'] . "," . $point['alt'];
-		}
-		$sResponse .= "</coordinates>
-					  			  </LinearRing>
-								</outerBoundaryIs>
-							</Polygon>
-						</Placemark>
-					". "\n" ;
-		$this->add_element($sResponse);
-	}
-	/**
-	 * Add Link
-	 * @param string $link link to file
-	 * @param string $tit title of link
-	 * @param string $sLayer style of link default ''
-	*/
-	function addLink($link, $tit) {
-		$aScript = explode('/', $_SERVER[SCRIPT_NAME]);
-		array_pop($aScript);
-		$sScript = implode('/', $aScript);
-		$sLink = "http://" . $_SERVER[SERVER_NAME] . "/" . $sScript . "/$link";
-		$sResponse = "<NetworkLink>";
-		$sResponse .= "<name>$tit</name>";
-		$sResponse .= "<Url>
-					<href>$sLink</href>
-					<refreshMode>onInterval</refreshMode>
-					<viewRefreshMode>onRequest</viewRefreshMode>
-				</Url>
-				</NetworkLink>";
-		//echo $sResponse;
-		$this->add_element($sResponse);
-	}
-	/**
-	 * Add SreenOverlay
-	 * @param string $link link to logo file
-	 * @param string $tit title of logo
-	*/
-	function addScreenOverlay($link, $tit) {
-		$aScript = explode('/', $_SERVER[SCRIPT_NAME]);
-		array_pop($aScript);
-		$sScript = implode('/', $aScript);
-		$sLink = "http://" . $_SERVER[SERVER_NAME] . "/" . $sScript . "/$link";
-		$sResponse = "<ScreenOverlay>";
-		$sResponse .= "<name>$tit</name>";
-		$sResponse .= "<Icon>
-					<href>$sLink</href>
-				</Icon>
-	<overlayXY x=\"1\" y=\"1\" xunits=\"fraction\" yunits=\"fraction\"/>
-	<screenXY x=\"1\" y=\"1\" xunits=\"fraction\" yunits=\"fraction\"/>
-	<rotationXY x=\"0\" y=\"0\" xunits=\"fraction\" yunits=\"fraction\"/>
-	<size x=\"0.1\" y=\"0.1\" xunits=\"fraction\" yunits=\"fraction\"/>
-	</ScreenOverlay>";
-		//echo $sResponse;
-		$this->add_element($sResponse);
-	}
+      $sResponse = "<Placemark>";
+      $sResponse .= "<name>$tit</name>";
+      $sResponse .= "<styleUrl>#$sLayer</styleUrl>";
+      $sResponse .= "<Polygon>";
+      $sResponse .= "<tessellate>1</tessellate>";
+      $sResponse .= "<outerBoundaryIs>
+                           <LinearRing>
+                              <coordinates>
+               ";
+      $first = true;
+      foreach ($coordinates as $key => $point) {
+         if ($first) {
+            $sResponse .= $point['lon'] . "," . $point['lat'] . "," . $point['alt'];
+            $first = false;
+         } else
+            $sResponse .= " " . $point['lon'] . "," . $point['lat'] . "," . $point['alt'];
+      }
+      $sResponse .= "</coordinates>
+                          </LinearRing>
+                        </outerBoundaryIs>
+                     </Polygon>
+                  </Placemark>
+               ". "\n" ;
+      $this->add_element($sResponse);
+   }
+   /**
+    * Add Link
+    * @param string $link link to file
+    * @param string $tit title of link
+    * @param string $sLayer style of link default ''
+   */
+   function addLink($link, $tit) {
+      $aScript = explode('/', $_SERVER[SCRIPT_NAME]);
+      array_pop($aScript);
+      $sScript = implode('/', $aScript);
+      $sLink = "http://" . $_SERVER[SERVER_NAME] . "/" . $sScript . "/$link";
+      $sResponse = "<NetworkLink>";
+      $sResponse .= "<name>$tit</name>";
+      $sResponse .= "<Url>
+               <href>$sLink</href>
+               <refreshMode>onInterval</refreshMode>
+               <viewRefreshMode>onRequest</viewRefreshMode>
+            </Url>
+            </NetworkLink>";
+      //echo $sResponse;
+      $this->add_element($sResponse);
+   }
+   /**
+    * Add SreenOverlay
+    * @param string $link link to logo file
+    * @param string $tit title of logo
+   */
+   function addScreenOverlay($link, $tit) {
+      $aScript = explode('/', $_SERVER[SCRIPT_NAME]);
+      array_pop($aScript);
+      $sScript = implode('/', $aScript);
+      $sLink = "http://" . $_SERVER[SERVER_NAME] . "/" . $sScript . "/$link";
+      $sResponse = "<ScreenOverlay>";
+      $sResponse .= "<name>$tit</name>";
+      $sResponse .= "<Icon>
+               <href>$sLink</href>
+            </Icon>
+   <overlayXY x=\"1\" y=\"1\" xunits=\"fraction\" yunits=\"fraction\"/>
+   <screenXY x=\"1\" y=\"1\" xunits=\"fraction\" yunits=\"fraction\"/>
+   <rotationXY x=\"0\" y=\"0\" xunits=\"fraction\" yunits=\"fraction\"/>
+   <size x=\"0.1\" y=\"0.1\" xunits=\"fraction\" yunits=\"fraction\"/>
+   </ScreenOverlay>";
+      //echo $sResponse;
+      $this->add_element($sResponse);
+   }
 }
 ?>
