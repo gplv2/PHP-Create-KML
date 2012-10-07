@@ -37,12 +37,11 @@ class kml {
 
 
    /**
-    * Constructor
-      new $kml('my_doc_name', array('name'=> 'testing', array('id'=> 'StartIcon','url'=> 'http://live.synctrace.com/icons/busstopblue.png','width'=> 2))
+    * Constructo
     */
    public function __construct($sName, $properties=array(), $options=array()) {
       if(count($options)) {
-         $this->$settings = array_merge($this->settings, $options);
+         $this->settings = array_merge($this->settings, $options);
       }
 
       $this->sName = $sName;
@@ -79,11 +78,11 @@ class kml {
 
       if(!empty($this->settings['load_default_icon_styles'])) {
          $default_icon_styles = array(
-            array('id'=> 'busIcon','url'=> 'http://live.synctrace.com/icons/bus.png','width'=> 2),
-            array('id'=> 'busIcon2','url'=> 'http://live.synctrace.com/icons/bustour.png','width'=> 3),
-            array('id'=> 'StartIcon','url'=> 'http://live.synctrace.com/icons/busstopblue.png','width'=> 2),
-            array('id'=> 'SleepIcon','url'=> 'http://live.synctrace.com/images/kml/2/icon28.png','width'=> 2),
-            array('id'=> 'StopIcon','url'=> 'http://live.synctrace.com/images/kml/4/icon15.png','width'=> 2)
+            array('id'=> 'busIcon','image_url'=> 'http://live.synctrace.com/icons/bus.png','width'=> 2),
+            array('id'=> 'busIcon2','image_url'=> 'http://live.synctrace.com/icons/bustour.png','width'=> 3),
+            array('id'=> 'StartIcon','image_url'=> 'http://live.synctrace.com/icons/busstopblue.png','width'=> 2),
+            array('id'=> 'SleepIcon','image_url'=> 'http://live.synctrace.com/images/kml/2/icon28.png','width'=> 2),
+            array('id'=> 'StopIcon','image_url'=> 'http://live.synctrace.com/images/kml/4/icon15.png','width'=> 2)
          );
          $this->add_icon_style($default_icon_styles);
       }
@@ -107,10 +106,11 @@ class kml {
             array('id'=> 'auto_D','color'=> 'ffc34ead','width'=> 4),
             array('id'=> 'auto_E','color'=> 'ffee82ee','width'=> 4)
          );
-         $this->add_icon_style($default_poly_styles);
+         $this->add_poly_style($default_poly_styles);
       }
       
       if (!empty($this->settings['icon_styles']) && is_array($this->settings['icon_styles'])) {
+         // print_r($this->settings['icon_styles']); exit;
          $this->add_icon_style($this->settings['icon_styles']);
       }
       if (!empty($this->settings['poly_styles']) && is_array($this->settings['poly_styles'])) {
@@ -119,6 +119,8 @@ class kml {
       if (!empty($this->settings['line_styles']) && is_array($this->settings['line_styles'])) {
          $this->add_line_style($this->settings['line_styles']);
       }
+         // echo $this->export_all_styles(); exit;
+
       if (count($this->styles)) {
          $this->sHeader .= $this->export_all_styles();
       }
@@ -138,13 +140,15 @@ class kml {
          $this->sHeader .= "<description><![CDATA[" . $sName . "]]>" . "</description>" . "\n";
       }
 
+/*
       foreach ($properties as $key => $property) {
          if (in_array( $key, array('description','name'))) {
-            $this->sHeader .= sprintf('<%s><![CDATA[%s]]></%s>\n',$key, $property ,$key);
+            $this->sHeader .= sprintf('<%s><![CDATA[%s]]></%s>%s',$key, $property ,$key,"\n");
          } else {
-            $this->sHeader .= sprintf('<%s>%s</%s>\n',$key, $property ,$key);
+            $this->sHeader .= sprintf('<%s>%s</%s>%s',$key, $property ,$key, "\n");
          }  
       }
+*/
 
       $this->sFooter .= '</Folder>' . "\n";
       $this->sFooter .= "</Document>" . "\n";
@@ -158,16 +162,18 @@ class kml {
       $url='http://live.synctrace.com/icons/busstopblue.png';
       $width=2;)
 */
+
+   //print_r($attr); exit;
       foreach($attr as $key => $style) {
          if (!empty($style['id']) && !empty($style['image_url']) && !empty($style['width'])){
-            $sStyle  = sprintf('<Style id="%s">\n',$style['id']);
+            $sStyle  = sprintf('<Style id="%s">%s',$style['id'],"\n");
             $sStyle .= '<IconStyle>'. "\n";
             $sStyle .= '<Icon>'. "\n";
-            $sStyle .= sprintf('<href>%s</href>\n',$style['image_url']);
+            $sStyle .= sprintf('<href>%s</href>%s',$style['image_url'], "\n");
             $sStyle .= '</Icon>'. "\n";
             $sStyle .= '</IconStyle>'. "\n";
             $sStyle .= '<LineStyle>'. "\n";
-            $sStyle .= sprintf('<width>%s</width>\n',$style['width']);
+            $sStyle .= sprintf('<width>%s</width>%s',$style['width'],"\n");
             $sStyle .= '</LineStyle>'. "\n";
             $sStyle .= '</Style>'. "\n";
          }
@@ -185,13 +191,13 @@ class kml {
 */
       foreach($attr as $key => $style) {
          if (!empty($style['id']) && !empty($style['color']) && !empty($style['width'])){
-            $sStyle  = sprintf('<Style id="%s">\n',$style['id']);
+            $sStyle  = sprintf('<Style id="%s">%s',$style['id'], "\n");
             $sStyle .= '<LineStyle>' ."\n";
-            $sStyle .= sprintf('<color>%s</color>\n',$style['color']);
-            $sStyle .= sprintf('<width>%s</width>\n',$style['width']);
+            $sStyle .= sprintf('<color>%s</color>%s',$style['color'],"\n");
+            $sStyle .= sprintf('<width>%s</width>%s',$style['width'],"\n");
             $sStyle .= '</LineStyle>' ."\n";
             $sStyle .= '<PolyStyle>' ."\n";
-            $sStyle .= sprintf('<color>%s</color>\n',(isset($style['polycolor']) ? $style['polycolor'] : $style['color']) );
+            $sStyle .= sprintf('<color>%s</color>%s',(isset($style['polycolor']) ? $style['polycolor'] : $style['color']), "\n" );
             $sStyle .= '</PolyStyle>' ."\n";
             $sStyle .= '</Style>' ."\n";
          }
@@ -209,10 +215,10 @@ class kml {
 */
       foreach($attr as $key => $style) {
          if (!empty($style['id']) && !empty($style['color']) && !empty($style['width'])){
-            $sStyle  = sprintf('<Style id="%s">\n',$style['id']);
+            $sStyle  = sprintf('<Style id="%s">%s',$style['id'],"\n");
             $sStyle .= '<LineStyle>'."\n";
-            $sStyle .= sprintf('<color>%s</color>\n',$style['color']);
-            $sStyle .= sprintf('<width>%s</width>\n',$style['width']);
+            $sStyle .= sprintf('<color>%s</color>%s',$style['color'], "\n");
+            $sStyle .= sprintf('<width>%s</width>%s',$style['width'], "\n");
             $sStyle .= '</LineStyle>'."\n";
             $sStyle .= '</Style>' . "\n";
          }
@@ -223,11 +229,14 @@ class kml {
 
    /* Creates the styles text */
    private function export_all_styles() {
-      $style="";
+      $my_style="";
+      // print_r($this->styles); exit;
       foreach ( $this->styles as $key => $style ){
-         $style .= $style;
+         // print_r($style); 
+         $my_style .= $style;
       }
-      return $style;
+   //echo $style; exit;
+      return $my_style;
    }
 
    /**

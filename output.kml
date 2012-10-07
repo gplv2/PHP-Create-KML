@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+<Document>
+<name>my_test_doc_name</name>
+<open>1</open>
+<description><![CDATA[my_test_doc_name]]></description>
+<Style id="StartIcon">
+<IconStyle>
+<Icon>
+<href>http://live.synctrace.com/icons/busstopblue.png</href>
+</Icon>
+</IconStyle>
+<LineStyle>
+<width>2</width>
+</LineStyle>
+</Style>
+<Folder>
+<visibility>1</visibility>
+<description><![CDATA[my_test_doc_name]]></description>
+<Placemark id="po_1">
+<name>PointTitle</name>
+<description><![CDATA[Kapelstraat 'Hemelrijkstraat']]></description>
+<visibility>1</visibility>
+<styleUrl>#startIcon</styleUrl>
+<Point>
+<tessellate>1</tessellate>
+<coordinates>4.277015,51.134124,0</coordinates>
+</Point>
+</Placemark>
+<Placemark id="po_2">
+<name>PointTitle</name>
+<description><![CDATA[Kruibekestraat 'Dorp']]></description>
+<visibility>1</visibility>
+<styleUrl>#startIcon</styleUrl>
+<Point>
+<tessellate>1</tessellate>
+<coordinates>4.298472,51.147748,0</coordinates>
+</Point>
+</Placemark>
+<Placemark id="po_3">
+<name>PointTitle</name>
+<description><![CDATA[Bazelstraat 'Mercatorstraat']]></description>
+<visibility>1</visibility>
+<styleUrl>#startIcon</styleUrl>
+<Point>
+<tessellate>1</tessellate>
+<coordinates>4.310575,51.167343,0</coordinates>
+</Point>
+</Placemark>
+<Placemark id="po_4">
+<name>PointTitle</name>
+<description><![CDATA[O.L.Vrouwplein 'Dorp']]></description>
+<visibility>1</visibility>
+<styleUrl>#startIcon</styleUrl>
+<Point>
+<tessellate>1</tessellate>
+<coordinates>4.312806,51.170895,0</coordinates>
+</Point>
+</Placemark>
+<Placemark id="po_5">
+<name>PointTitle</name>
+<description><![CDATA[Burchtstraat 'Scheldelei']]></description>
+<visibility>1</visibility>
+<styleUrl>#startIcon</styleUrl>
+<Point>
+<tessellate>1</tessellate>
+<coordinates>4.315896,51.176384,0</coordinates>
+</Point>
+</Placemark>
+<Placemark id="po_6">
+<name>PointTitle</name>
+<description><![CDATA[Kruibeeksesteenweg 'Veldstraat']]></description>
+<visibility>1</visibility>
+<styleUrl>#startIcon</styleUrl>
+<Point>
+<tessellate>1</tessellate>
+<coordinates>4.328599,51.197741,0</coordinates>
+</Point>
+</Placemark>
+<Placemark id="po_7">
+<name>PointTitle</name>
+<description><![CDATA[Heirbaan 'Kampstraat']]></description>
+<visibility>1</visibility>
+<styleUrl>#startIcon</styleUrl>
+<Point>
+<tessellate>1</tessellate>
+<coordinates>4.335637,51.200645,0</coordinates>
+</Point>
+</Placemark>
+<Placemark id="po_8">
+<name>PointTitle</name>
+<description><![CDATA[Dorpstraat 'Kerkplein']]></description>
+<visibility>1</visibility>
+<styleUrl>#startIcon</styleUrl>
+<Point>
+<tessellate>1</tessellate>
+<coordinates>4.345937,51.201775,0</coordinates>
+</Point>
+</Placemark>
+<Placemark id="po_9">
+<name>PointTitle</name>
+<description><![CDATA[Frederik Van Eedenplein 'Van Eedenplein - Perron 1a']]></description>
+<visibility>1</visibility>
+<styleUrl>#startIcon</styleUrl>
+<Point>
+<tessellate>1</tessellate>
+<coordinates>4.386535,51.220594,0</coordinates>
+</Point>
+</Placemark>
+<Placemark id="po_10">
+<name>PointTitle</name>
+<description><![CDATA[Blancefloerlaan 'Halewijn']]></description>
+<visibility>1</visibility>
+<styleUrl>#startIcon</styleUrl>
+<Point>
+<tessellate>1</tessellate>
+<coordinates>4.379153,51.220594,0</coordinates>
+</Point>
+</Placemark>
+<Placemark id="po_11">
+<name>PointTitle</name>
+<description><![CDATA[Verbrandendijk "Van Goey"]]></description>
+<visibility>1</visibility>
+<styleUrl>#startIcon</styleUrl>
+<Point>
+<tessellate>1</tessellate>
+<coordinates>4.334607,51.219572,0</coordinates>
+</Point>
+</Placemark>
+<Placemark id="po_12">
+<name>PointTitle</name>
+<description><![CDATA[Dorp West 'Dorp']]></description>
+<visibility>1</visibility>
+<styleUrl>#startIcon</styleUrl>
+<Point>
+<tessellate>1</tessellate>
+<coordinates>4.325683,51.219216,0</coordinates>
+</Point>
+</Placemark>
+<Placemark id="po_13">
+<name>PointTitle</name>
+<description><![CDATA[Dorp West 'Hof Ter Rijen']]></description>
+<visibility>1</visibility>
+<styleUrl>#startIcon</styleUrl>
+<Point>
+<tessellate>1</tessellate>
+<coordinates>4.318385,51.219035,0</coordinates>
+</Point>
+</Placemark>
+<Placemark id="po_14">
+<name>PointTitle</name>
+<description><![CDATA[Grote Baan 'Burggravenlaan']]></description>
+<visibility>1</visibility>
+<styleUrl>#startIcon</styleUrl>
+<Point>
+<tessellate>1</tessellate>
+<coordinates>4.293151,51.220862,0</coordinates>
+</Point>
+</Placemark>
+<Placemark id="po_15">
+<name>PointTitle</name>
+<description><![CDATA[Grote Baan 'Spoorweglaan']]></description>
+<visibility>1</visibility>
+<styleUrl>#startIcon</styleUrl>
+<Point>
+<tessellate>1</tessellate>
+<coordinates>4.325683,51.219216,0</coordinates>
+</Point>
+</Placemark>
+</Folder>
+</Document>
+</kml>
