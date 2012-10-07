@@ -17,7 +17,6 @@ class kml {
    private $sName;
 
    private $point_counter=0;
-   private $gx=0;
    private $line_counter=0;
    private $lookat_counter=0;
 
@@ -25,16 +24,27 @@ class kml {
 
    private $styles=array();
 
+   private $gx=0;
+
    private $settings= array(
          'debug' => 0,
-         'verbose' => 0
+         'verbose' => 0,
+         'load_default_poly_styles' => 0,
+         'load_default_line_styles' => 0,
+         'load_default_icon_styles' => 0,
+         'output_dir' => 'output'
     );
 
 
 	/**
 	 * Constructor
+      new $kml('my_doc_name', array('name'=> 'testing', array('id'=> 'StartIcon','url'=> 'http://live.synctrace.com/icons/busstopblue.png','width'=> 2))
 	 */
-	public function __construct($sName, $properties) {
+	public function __construct($sName, $properties=array(), $options=array()) {
+      if(count($options)) {
+         $this->$settings = array_merge($this->settings, $options);
+      }
+
 		$this->sName = $sName;
 		$this->sHeader = '<?xml version="1.0" encoding="utf-8"?>' . "\n";
 		// $this->sHeader .= '<kml xmlns="http://earth.google.com/kml/2.0">' . "\n"; -> This makes stuff fail in google earth at the time
@@ -51,57 +61,67 @@ class kml {
 
 		//$this->sHeader .= "<description>Description</description>"  . "\n";
 		/** http://code.google.com/p/kml-samples/source/browse/trunk/kml/Style/styles.kml?spec=svn115&r=115 */
-
-      $default_line_styles = array(
-         array('id'=> 'LightGreenLine','color'=> 'ff56ff1d','width'=> 3),
-         array('id'=> 'GreenLine','color'=> 'ff35d500','width'=> 3),
-         array('id'=> 'DarkGreenLine','color'=> 'ff0dc70b','width'=> 3),
-         array('id'=> 'LightRedLine','color'=> 'ffa5a5f7','width'=> 3),
-         array('id'=> 'RedLine','color'=> 'ff0000ff','width'=> 3),
-         array('id'=> 'DarkRedLine','color'=> 'ff2222a5','width'=> 3),
-         array('id'=> 'LightBlueLine','color'=> 'fffca17e','width'=> 3),
-         array('id'=> 'BlueLine','color'=> 'ffff16a1','width'=> 3),
-         array('id'=> 'DarkBlueLine','color'=> 'ffa00b03','width'=> 3)
-      );
       
-      $this->add_line_style($default_line_styles);
+      if(!empty($this->settings['load_default_line_styles'])) {
+         $default_line_styles = array(
+            array('id'=> 'LightGreenLine','color'=> 'ff56ff1d','width'=> 3),
+            array('id'=> 'GreenLine','color'=> 'ff35d500','width'=> 3),
+            array('id'=> 'DarkGreenLine','color'=> 'ff0dc70b','width'=> 3),
+            array('id'=> 'LightRedLine','color'=> 'ffa5a5f7','width'=> 3),
+            array('id'=> 'RedLine','color'=> 'ff0000ff','width'=> 3),
+            array('id'=> 'DarkRedLine','color'=> 'ff2222a5','width'=> 3),
+            array('id'=> 'LightBlueLine','color'=> 'fffca17e','width'=> 3),
+            array('id'=> 'BlueLine','color'=> 'ffff16a1','width'=> 3),
+            array('id'=> 'DarkBlueLine','color'=> 'ffa00b03','width'=> 3)
+         );
+         $this->add_line_style($default_line_styles);
+      }
 
-      $default_icon_styles = array(
-         array('id'=> 'busIcon','url'=> 'http://live.synctrace.com/icons/bus.png','width'=> 2),
-         array('id'=> 'busIcon2','url'=> 'http://live.synctrace.com/icons/bustour.png','width'=> 3),
-         array('id'=> 'StartIcon','url'=> 'http://live.synctrace.com/icons/busstopblue.png','width'=> 2),
-         array('id'=> 'SleepIcon','url'=> 'http://live.synctrace.com/images/kml/2/icon28.png','width'=> 2),
-         array('id'=> 'StopIcon','url'=> 'http://live.synctrace.com/images/kml/4/icon15.png','width'=> 2)
-      );
+      if(!empty($this->settings['load_default_icon_styles'])) {
+         $default_icon_styles = array(
+            array('id'=> 'busIcon','url'=> 'http://live.synctrace.com/icons/bus.png','width'=> 2),
+            array('id'=> 'busIcon2','url'=> 'http://live.synctrace.com/icons/bustour.png','width'=> 3),
+            array('id'=> 'StartIcon','url'=> 'http://live.synctrace.com/icons/busstopblue.png','width'=> 2),
+            array('id'=> 'SleepIcon','url'=> 'http://live.synctrace.com/images/kml/2/icon28.png','width'=> 2),
+            array('id'=> 'StopIcon','url'=> 'http://live.synctrace.com/images/kml/4/icon15.png','width'=> 2)
+         );
+         $this->add_icon_style($default_icon_styles);
+      }
 
-      $this->add_icon_style($default_icon_styles);
 
-
-      /*
-      $this->sHeader .= '</Style>' ."\n";
-      */
+      if(!empty($this->settings['load_default_poly_styles'])) {
+         $default_poly_styles = array(
+            array('id'=> 'auto_0','color'=> 'ff0000ff','width'=> 4),
+            array('id'=> 'auto_1','color'=> 'ff0041ff','width'=> 4),
+            array('id'=> 'auto_2','color'=> 'ff00a5ff','width'=> 4),
+            array('id'=> 'auto_3','color'=> 'ff00bbff','width'=> 4),
+            array('id'=> 'auto_4','color'=> 'ff00ffff','width'=> 4),
+            array('id'=> 'auto_5','color'=> 'ff00e4ca','width'=> 4),
+            array('id'=> 'auto_6','color'=> 'ff00b265','width'=> 4),
+            array('id'=> 'auto_7','color'=> 'ff008000','width'=> 4),
+            array('id'=> 'auto_8','color'=> 'ff654d00','width'=> 4),
+            array('id'=> 'auto_9','color'=> 'ffff0000','width'=> 4),
+            array('id'=> 'auto_A','color'=> 'ffe00012','width'=> 4),
+            array('id'=> 'auto_B','color'=> 'ff82004b','width'=> 4),
+            array('id'=> 'auto_C','color'=> 'ff981a6c','width'=> 4),
+            array('id'=> 'auto_D','color'=> 'ffc34ead','width'=> 4),
+            array('id'=> 'auto_E','color'=> 'ffee82ee','width'=> 4)
+         );
+         $this->add_icon_style($default_poly_styles);
+      }
       
-      $default_poly_styles = array(
-         array('id'=> 'auto_0','color'=> 'ff0000ff','width'=> 4),
-         array('id'=> 'auto_1','color'=> 'ff0041ff','width'=> 4),
-         array('id'=> 'auto_2','color'=> 'ff00a5ff','width'=> 4),
-         array('id'=> 'auto_3','color'=> 'ff00bbff','width'=> 4),
-         array('id'=> 'auto_4','color'=> 'ff00ffff','width'=> 4),
-         array('id'=> 'auto_5','color'=> 'ff00e4ca','width'=> 4),
-         array('id'=> 'auto_6','color'=> 'ff00b265','width'=> 4),
-         array('id'=> 'auto_7','color'=> 'ff008000','width'=> 4),
-         array('id'=> 'auto_8','color'=> 'ff654d00','width'=> 4),
-         array('id'=> 'auto_9','color'=> 'ffff0000','width'=> 4),
-         array('id'=> 'auto_A','color'=> 'ffe00012','width'=> 4),
-         array('id'=> 'auto_B','color'=> 'ff82004b','width'=> 4),
-         array('id'=> 'auto_C','color'=> 'ff981a6c','width'=> 4),
-         array('id'=> 'auto_D','color'=> 'ffc34ead','width'=> 4),
-         array('id'=> 'auto_E','color'=> 'ffee82ee','width'=> 4)
-      );
-
-      $this->add_icon_style($default_poly_styles);
-
-      $this->sHeader .= $this->export_all_styles();
+      if (!empty($this->settings['icon_styles']) && is_array($this->settings['icon_styles'])) {
+         $this->add_icon_style($this->settings['icon_styles']);
+      }
+      if (!empty($this->settings['poly_styles']) && is_array($this->settings['poly_styles'])) {
+         $this->add_poly_style($this->settings['poly_styles']);
+      }
+      if (!empty($this->settings['line_styles']) && is_array($this->settings['line_styles'])) {
+         $this->add_line_style($this->settings['line_styles']);
+      }
+      if (count($this->styles)) {
+         $this->sHeader .= $this->export_all_styles();
+      }
 
 		$this->sHeader .= '<Folder>' . "\n";
 
@@ -180,14 +200,6 @@ class kml {
       $this->styles[]=$sStyle;
    }
 
-   private function export_all_styles() {
-      $style="";
-      foreach ( $this->styles as $key => $style ){
-         $style .= $style;
-      }
-      return $style;
-   }
-
    public function add_line_style($attr) {
 /* pseudo:
       array(
@@ -208,6 +220,16 @@ class kml {
 
       $this->styles[]=$sStyle;
    }
+
+   /* Creates the styles text */
+   private function export_all_styles() {
+      $style="";
+      foreach ( $this->styles as $key => $style ){
+         $style .= $style;
+      }
+      return $style;
+   }
+
 	/**
 	/**
 	 * Add element to kml file
@@ -225,7 +247,6 @@ class kml {
 		header('Content-type: text/xml');
 		header('Content-type: application/vnd.google-earth.kml+xml');
 		//header('Content-Disposition: attachement; filename="' . $this->sName . '.kml"');
-		$sKml = $this->sHeader . $this->sBody . $this->sFooter;
 		//header('Content-Length: ' . strlen($sKml));
 		header('Expires: 0');
 		header('Pragma: cache');
@@ -233,6 +254,7 @@ class kml {
 
 		//header('Content-type: application/keyhole');
 		header('Content-Disposition:atachment; filename="' . $filename. '.kml"');
+		$sKml = $this->sHeader . $this->sBody . $this->sFooter;
 		// header('Content-Length: ' . strlen($sKml));
 		echo $sKml;
 	}
@@ -245,7 +267,12 @@ class kml {
 		}
       // trigger_error($filename);
 		//debug($this->getCurrentDirectory());
-		$myfile=$this->getCurrentDirectory() . '/output/'.$filename.".kml";
+
+      if (!empty($this->settings['output_dir'])) {
+		   $myfile=$this->getCurrentDirectory() . '/' . $this->settings['output_dir'] . '/'.$filename.".kml";
+      } else {
+		   $myfile=$this->getCurrentDirectory() . '/'.$filename.".kml";
+      }
 
 		$tempf = @fopen($myfile, 'w');
 		if(!$tempf) {
