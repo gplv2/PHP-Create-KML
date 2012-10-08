@@ -6,15 +6,15 @@ EOD;
 
 $array=json_decode($json,true);
 
-$custom_styles = array(
-   array('id'=> 'StartIcon','image_url'=> 'http://live.synctrace.com/icons/busstopblue.png','width'=> 2)
+$custom_icon_styles = array(
+   array('id'=> 'HalteIcon','image_url'=> 'http://live.synctrace.com/icons/busstopblue.png','width'=> 2)
 );
 
 require_once('class.kml2.php');
-$kml = new kml('my_test_doc_name', array('name'=> 'testing','glenn'=>'is cool'), array('icon_styles' => $custom_styles));
+$kml = new kml('Haltes', array('name'=> 'Lijn 1','glenn'=>'is cool'), array('icon_styles' => $custom_icon_styles));
 
 foreach ($array as $key=>$val) {
-   $pointStyle="StartIcon";
+   $pointStyle="HalteIcon";
    $kml->addPoint($val['lon'], $val['lat'], 0 , $options = array('title' => $val['halte_label'] , 'description' => $val['halte_label']), $pointStyle );
 }
 

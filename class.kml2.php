@@ -389,7 +389,9 @@ class kml {
 
       //$sResponse .= "<description><![CDATA[" . $options['description'] . "]]>" . "</description>" . "\n";
       if(isset($options['title'])){
-         $sResponse .= "<name>". $options['title'] ."</name>" . "\n";
+         $mkey='name';
+         $sResponse .= sprintf('<%s><![CDATA[%s]]></%s>%s',$mkey, $options['title'],$mkey,"\n");
+         //$sResponse .= "<name>". $options['title'] ."</name>" . "\n";
       }
       if(isset($options['description'])){
          $sResponse .= "<description><![CDATA[" . $options['description'] . "]]>" . "</description>" . "\n";
