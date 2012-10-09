@@ -307,6 +307,17 @@ class kml {
     * Save localally, parse with command line tool and hand back as gml
     */
    function exportgml($filename) {
+
+      if (!file_exists('/usr/bin/xsltproc')){ 
+         trigger_error("No gml support.");
+         return -1;
+      }
+
+      if (!file_exists('kml2gml.xsl')){ 
+         trigger_error("No kml2gml conversion schema found.");
+         return -1;
+      }
+
       $parsedfile=$this->exportlocal($filename);
       if (strlen($parsedfile)<=0) {
          trigger_error("File name empty!");
