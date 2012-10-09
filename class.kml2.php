@@ -373,6 +373,8 @@ class kml {
 
       $defaults =  array('title' => 'PointTitle', 'description' => 'PointDescription' , 'heading' => 0, 'altitude' =>0, 'visibility' => 1, 'altitude' =>0, 'range' => 150, 'tilt' => 60, 'altitudemode' =>'clampToGround', 'tessellate' => 1, 'extrude' => 1);
       $options = array_merge($defaults, $user_options);
+// print_r($options);exit;
+
 
       $sResponse = '<Placemark id="po_'. $this->point_counter . '">' . "\n";
       if(isset($options['timestamp'])){
@@ -396,6 +398,16 @@ class kml {
       if(isset($options['description'])){
          $sResponse .= "<description><![CDATA[" . $options['description'] . "]]>" . "</description>" . "\n";
       }
+
+      /* other attributes  */
+      $special_attr_list = array('timestamp','title','description','visibility','coordinates','altitudemode','altitude','extrude','begin','end');
+      foreach ( $options as $mattr => $value) {
+         if (!in_array($mattr, $special_attr_list)) {
+            $sResponse .= sprintf('<%1$s>%2$s</%1$s>%3$s',$mattr,$value,"\n");
+         }
+      }
+         // $sResponse .= '<heading>'. $options['heading'] . '</heading>' . "\n";
+
       if(isset($options['visibility'])){
          $sResponse .= '<visibility>1</visibility>' . "\n";
       }
@@ -405,6 +417,7 @@ class kml {
          $sResponse .= "<tessellate>". $options['tessellate']  ."</tessellate>" . "\n";
       }
       //$sResponse .= "<extrude>". $options['extrude'] ."</extrude>" . "\n";
+
       $sResponse .= "<coordinates>$lon,$lat,$alt</coordinates>" . "\n";
       $sResponse .= '</Point>' . "\n";
       $sResponse .= '</Placemark>' . "\n";
@@ -463,7 +476,8 @@ class kml {
          $sResponse .= "<TimeStamp><when>" .$options['timestamp'] . "</when></TimeStamp>" . "\n";
       }
       if(isset($options['title'])){
-         $sResponse .= "<name>". $options['title'] ."</name>" . "\n";
+         $sResponse .= "<name><![CDATA[" . $options['title'] . "]]>" . "</name>" . "\n";
+         //$sResponse .= "<name>". $options['title'] ."</name>" . "\n";
       }
       if(isset($options['description'])){
          $sResponse .= "<description><![CDATA[" . $options['description'] . "]]>" . "</description>" . "\n";
