@@ -37,7 +37,6 @@ class kml {
 
 
    /**
-    * Constructo
     */
    public function __construct($sName, $properties=array(), $options=array()) {
       if(count($options)) {
