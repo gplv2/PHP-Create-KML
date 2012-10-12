@@ -79,7 +79,7 @@ class kml {
          $default_icon_styles = array(
             array('id'=> 'busIcon','image_url'=> 'http://live.synctrace.com/icons/bus.png','width'=> 2),
             array('id'=> 'busIcon2','image_url'=> 'http://live.synctrace.com/icons/bustour.png','width'=> 3),
-            array('id'=> 'StartIcon','image_url'=> 'http://live.synctrace.com/icons/busstopblue.png','width'=> 2),
+            array('id'=> 'StartIcon','image_url'=> 'http://live.synctrace.com/icons/busstopbluesmall.png','width'=> 2),
             array('id'=> 'SleepIcon','image_url'=> 'http://live.synctrace.com/images/kml/2/icon28.png','width'=> 2),
             array('id'=> 'StopIcon','image_url'=> 'http://live.synctrace.com/images/kml/4/icon15.png','width'=> 2)
          );
@@ -157,7 +157,7 @@ class kml {
 /* pseudo:
       array(
       $id='startIcon';
-      $url='http://live.synctrace.com/icons/busstopblue.png';
+      $url='http://live.synctrace.com/icons/busstopbluesmall.png';
       $width=2;)
 */
 
@@ -184,7 +184,7 @@ class kml {
 /* pseudo:
       array(
       $id='startIcon';
-      $url='http://live.synctrace.com/icons/busstopblue.png';
+      $url='http://live.synctrace.com/icons/busstopbluesmall.png';
       $width=2;)
 */
       foreach($attr as $key => $style) {
@@ -208,7 +208,7 @@ class kml {
 /* pseudo:
       array(
       $id='startIcon';
-      $url='http://live.synctrace.com/icons/busstopblue.png';
+      $url='http://live.synctrace.com/icons/busstopbluesmall.png';
       $width=2;)
 */
       foreach($attr as $key => $style) {
@@ -416,8 +416,7 @@ class kml {
             $sResponse .= sprintf('<%1$s>%2$s</%1$s>%3$s',$mattr,$value,"\n");
          }
       }
-         // $sResponse .= '<heading>'. $options['heading'] . '</heading>' . "\n";
-
+      // $sResponse .= '<heading>'. $options['heading'] . '</heading>' . "\n";
       if(isset($options['visibility'])){
          $sResponse .= '<visibility>1</visibility>' . "\n";
       }
